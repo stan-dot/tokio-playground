@@ -1,9 +1,41 @@
-use std::{collections::HashMap, sync::{Arc, Mutex}};
+use std::{collections::HashMap, hash::Hash, sync::{Arc, Mutex, MutexGuard}};
 use bytes::Bytes;
 use tokio::net::{TcpListener, TcpStream};
+use tokio::sync::Mutex as TokioMutex;
 use mini_redis::{Connection, Frame};
 
+
 type Db = Arc<Mutex<HashMap<String, Bytes>>>;
+
+// mutex sharding not just a single mutex
+type ShardedDb = Arc<Vec<Mutex<HashMap<String, Vec<u8>>>>>;
+
+fn new_sharded_db(num_shards:usize)->ShardedDb{
+    let mut db = Vec::with_capacity(num_shards);
+    for _ in 0..num_shards{
+        db.push(Mutex::new(HashMap::new()));
+    }
+    Arc::new(db)
+}
+
+async fn increment_and_do_stuff(mutex: &Mutex<i32>){
+    {
+
+    let mut lock: MutexGuard<i32> = mutex.lock().unwrap();
+    *lock += 1;
+    }
+
+    // example
+    // do_something_async().await;
+}
+
+
+async fn another_increment(mutex:&TokioMutex<i32>){
+    let mut lock = mutex.lock().await;
+    *lock += 1;
+    // do_something_async().await;
+}
+
 
 #[tokio::main]
 async fn main(){
