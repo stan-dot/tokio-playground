@@ -13,7 +13,7 @@ type Responder<T> = oneshot::Sender<mini_redis::Result<T>>;
 enum Command{
     Get{
         key:String,
-        resp:Responder<Option<Bytes>,
+        resp:Responder<Option<Bytes>>,
     },
     Set{
         key:String,
