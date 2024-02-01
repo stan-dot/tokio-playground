@@ -1,0 +1,7 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "./my-redis/Cargo.toml",
+        "./my-redis/Cargo.toml"
+    ],
+    "rust-analyzer.showUnlinkedFileNotification": false
+}
