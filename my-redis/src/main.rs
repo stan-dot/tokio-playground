@@ -1,3 +1,5 @@
+pub mod connection;
+
 use std::{collections::HashMap, sync::{Arc, Mutex}};
 use bytes::Bytes;
 use tokio::net::{TcpListener, TcpStream};
